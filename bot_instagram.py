@@ -25,7 +25,7 @@ class insta_bot:
         self.driver.find_element_by_xpath('//button[@type="submit"]') \
             .click()
 
-    def alvo(self, user):
+    def curtir(self, user):
         #perfil alvo
         time.sleep(4)
         self.driver.get(f'https://www.instagram.com/{user}')
@@ -36,26 +36,41 @@ class insta_bot:
 
         #seguir/rolagem
         cont = 0
+        fechada = False
         rolagem = False
         while True:
             try: #verifica se há botão de seguir
                 self.driver.find_element_by_class_name("sqdOP.L3NKy.y3zKF")
 
             except: #se não houver botão de seguir
-                print('já seguindo...')
+                print('-já seguindo!!!')
                 rolagem = True
 
             else: #se haver botão de seguir
                 self.driver.find_element_by_class_name("sqdOP.L3NKy.y3zKF").click()
-                print('--> Seguiu!!!')
+                print('--> SEGUIU!!!')
                 cont += 1
-                time.sleep(3)
+                time.sleep(4)
 
             if rolagem: #rolagem da barra de seguidores
-                seguidores = self.driver.find_element_by_xpath("//div[@class='isgrP']")
-                self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', seguidores)
-
+                time.sleep(1)
+                try: #verifica se caixa de seguidores está aberta
+                    seguidores = self.driver.find_element_by_xpath("//div[@class='isgrP']")
+                except: #se estiver fechada
+                    print('Caixa de seguidores fechada')
+                    time.sleep(1)
+                    print('Reabrindo...')
+                    fechada = True
+                    self.driver.find_element_by_xpath("//a[contains(@href,'/followers')]").click()
+                    time.sleep(2)
+                    seguidores = self.driver.find_element_by_xpath("//div[@class='isgrP']")
+                    self.driver.execute_script(
+                        'arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', seguidores)
+                    rolagem = False
+                else: #se estiver aberta
+                    self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', seguidores)
+                    rolagem = False
 
 bot = insta_bot('digite-login', 'digite-senha')
 bot.logar()
-bot.alvo('alvo')
+bot.curtir('digite-alvo')
