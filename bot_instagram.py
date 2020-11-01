@@ -71,6 +71,6 @@ class insta_bot:
                     self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollTop + arguments[0].offsetHeight;', seguidores)
                     rolagem = False
 
-bot = insta_bot('digite-login', 'digite-senha')
+bot = insta_bot('teste00bot', 'bot@teste01')
 bot.logar()
-bot.curtir('digite-alvo')
+bot.curtir('instagram')
